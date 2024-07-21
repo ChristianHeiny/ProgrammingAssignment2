@@ -100,6 +100,55 @@ In order to complete this assignment, you must do the following:
 5.  Submit to Coursera the URL to your GitHub repository that contains
     the completed R code for the assignment.
 
-### Grading
+### Assignment Begins Here
 
-This assignment will be graded via peer assessment.
+# Function to create a special "matrix" object that can cache its inverse
+makeCacheMatrix <- function(x = matrix()) {
+  
+  # Initialize the inverse matrix (cache)
+  inverse <- NULL
+  
+  # Function to set the matrix
+  set <- function(y) {
+    x <<- y  # Assign 'y' to 'x'; '<<-' assigns in the parent environment
+    inverse <<- NULL  # Invalidate the cached inverse
+  }
+  
+  # Function to get the matrix
+  get <- function() {
+    x  # Return 'x'
+  }
+  
+  # Function to get the cached inverse
+  getInverse <- function() {
+    inverse  # Return 'inverse'
+  }
+  
+  # Function to compute the inverse of the matrix
+  cacheSolve <- function(...) {
+    # Check if the cached inverse is up-to-date
+    if (!is.null(inverse)) {
+      message("Getting cached data")
+      return(inverse)
+    }
+    
+    # If not, compute the inverse
+    mat <- get()
+    inverse <- solve(mat, ...)  # Compute inverse using solve()
+    
+    # Cache the inverse
+    setInverse(inverse)
+    
+    # Return the computed inverse
+    inverse
+  }
+  
+  # Function to set the cached inverse
+  setInverse <- function(inv) {
+    inverse <<- inv  # Assign 'inv' to 'inverse'; '<<-' assigns in the parent environment
+  }
+  
+  # Return a list of functions
+  list(set = set, get = get, getInverse = getInverse, cacheSolve = cacheSolve)
+}
+
