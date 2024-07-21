@@ -86,20 +86,6 @@ function in R. For example, if `X` is a square invertible matrix, then
 For this assignment, assume that the matrix supplied is always
 invertible.
 
-In order to complete this assignment, you must do the following:
-
-1.  Fork the GitHub repository containing the stub R files at
-    [https://github.com/rdpeng/ProgrammingAssignment2](https://github.com/rdpeng/ProgrammingAssignment2)
-    to create a copy under your own account.
-2.  Clone your forked GitHub repository to your computer so that you can
-    edit the files locally on your own machine.
-3.  Edit the R file contained in the git repository and place your
-    solution in that file (please do not rename the file).
-4.  Commit your completed R file into YOUR git repository and push your
-    git branch to the GitHub repository under your account.
-5.  Submit to Coursera the URL to your GitHub repository that contains
-    the completed R code for the assignment.
-
 ### Assignment Begins Here
 
 # Function to create a special "matrix" object that can cache its inverse
@@ -119,12 +105,7 @@ makeCacheMatrix <- function(x = matrix()) {
     x  # Return 'x'
   }
   
-  # Function to get the cached inverse
-  getInverse <- function() {
-    inverse  # Return 'inverse'
-  }
-  
-  # Function to compute the inverse of the matrix
+  # Function to compute the inverse of the matrix (cacheable version)
   cacheSolve <- function(...) {
     # Check if the cached inverse is up-to-date
     if (!is.null(inverse)) {
@@ -149,16 +130,18 @@ makeCacheMatrix <- function(x = matrix()) {
   }
   
   # Return a list of functions
-  list(set = set, get = get, getInverse = getInverse, cacheSolve = cacheSolve)
+  list(set = set, get = get, cacheSolve = cacheSolve)
 }
 
-###Sample Output
+# Function to compute the inverse of the special "matrix" returned by makeCacheMatrix
+cacheSolve <- function(cacheMatrix, ...) {
+  cacheMatrix$cacheSolve(...)  # Use the cacheSolve function from makeCacheMatrix
+}
 
-# Define a matrix
-mat <- matrix(c(1, 2, 3, 4), nrow = 2)
+### Example Usage
 
 # Create a cacheable matrix object
-cacheMat <- makeCacheMatrix(mat)
+cacheMat <- makeCacheMatrix(matrix(c(1, 2, 3, 4), nrow = 2))
 
 # Get the original matrix
 cacheMat$get()
@@ -168,7 +151,7 @@ cacheMat$get()
 # [2,]    2    4
 
 # Compute and cache the inverse
-cacheMat$cacheSolve()
+cacheSolve(cacheMat)
 # Output:
 #      [,1] [,2]
 # [1,]   -2  1.5
@@ -182,21 +165,24 @@ cacheMat$getInverse()
 # [2,]    1 -0.5
 
 # Now, if we try to compute the inverse again, it should retrieve the cached result
-cacheMat$cacheSolve()
+cacheSolve(cacheMat)
 # Output:
 # Getting cached data
 #      [,1] [,2]
 # [1,]   -2  1.5
 # [2,]    1 -0.5
 
-# Set a new matrix
-new_mat <- matrix(c(1, 0, 0, 1), nrow = 2)
-cacheMat$set(new_mat)
+# Change the matrix
+cacheMat$set(matrix(c(1, 0, 0, 1), nrow = 2))
 
 # Compute and cache the inverse for the new matrix
-cacheMat$cacheSolve()
+cacheSolve(cacheMat)
 # Output:
 #      [,1] [,2]
 # [1,]    1    0
 # [2,]    0    1
 
+
+
+  
+  
