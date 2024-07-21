@@ -152,3 +152,51 @@ makeCacheMatrix <- function(x = matrix()) {
   list(set = set, get = get, getInverse = getInverse, cacheSolve = cacheSolve)
 }
 
+###Sample Output
+
+# Define a matrix
+mat <- matrix(c(1, 2, 3, 4), nrow = 2)
+
+# Create a cacheable matrix object
+cacheMat <- makeCacheMatrix(mat)
+
+# Get the original matrix
+cacheMat$get()
+# Output:
+#      [,1] [,2]
+# [1,]    1    3
+# [2,]    2    4
+
+# Compute and cache the inverse
+cacheMat$cacheSolve()
+# Output:
+#      [,1] [,2]
+# [1,]   -2  1.5
+# [2,]    1 -0.5
+
+# Get the cached inverse
+cacheMat$getInverse()
+# Output:
+#      [,1] [,2]
+# [1,]   -2  1.5
+# [2,]    1 -0.5
+
+# Now, if we try to compute the inverse again, it should retrieve the cached result
+cacheMat$cacheSolve()
+# Output:
+# Getting cached data
+#      [,1] [,2]
+# [1,]   -2  1.5
+# [2,]    1 -0.5
+
+# Set a new matrix
+new_mat <- matrix(c(1, 0, 0, 1), nrow = 2)
+cacheMat$set(new_mat)
+
+# Compute and cache the inverse for the new matrix
+cacheMat$cacheSolve()
+# Output:
+#      [,1] [,2]
+# [1,]    1    0
+# [2,]    0    1
+
